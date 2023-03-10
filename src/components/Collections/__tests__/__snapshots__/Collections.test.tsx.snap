@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Collections should render correctly 1`] = `
+<div>
+  <div>
+    <div
+      class="collections"
+    />
+  </div>
+</div>
+`;

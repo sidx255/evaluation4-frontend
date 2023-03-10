@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ContentType should render correctly 1`] = `
+<div>
+  <div
+    class="content-type"
+  >
+    <div
+      class="content-type__header"
+    >
+      <div
+        class="content-type__header__left"
+      >
+        <p
+          class="content-type__header__left__text"
+        >
+          CONTENT TYPES
+        </p>
+      </div>
+      <div
+        class="content-type__header__right"
+      >
+        <p
+          class="content-type__header__right__text"
+        >
+          CREATE
+        </p>
+      </div>
+    </div>
+    <div
+      class="content-type__body"
+    >
+      <div
+        class="content-type__body__left"
+      >
+        <p
+          class="content-type__body__left__text"
+        >
+          CONTENT TYPES
+        </p>
+      </div>
+      <div
+        class="content-type__body__right"
+      >
+        <p
+          class="content-type__body__right__text"
+        >
+          CREATE
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;

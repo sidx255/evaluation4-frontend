@@ -1,26 +1,25 @@
-import React from 'react';
-import { useState } from 'react';
 
-import './Login.css';
+import React, { useState } from 'react';
+// States for registration
+import {useNavigate} from 'react-router-dom';
+import './Register.css';
 
 import loginart from '../../assets/login-art.png';
 
-// use navigate to redirect to another page
-import {useNavigate} from 'react-router-dom';
+const Register = () => {
 
-const Login = () => {
   const navigate = useNavigate();
   const routeChange = () =>{ 
     const path = '/home'; 
     navigate(path);
   };
 
-  const routeSubmit = () =>{
-    const path = '/register';
+  const routeLogin = () =>{
+    const path = '/login';
     navigate(path);
   };
 
-  // States for registration
+
   const [name, setName] = useState('');
   // const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,9 +29,8 @@ const Login = () => {
   const [error, setError] = useState(false);
 
   // send email and password to auth server
-
-  const login = async (email: string, password: string) => {
-    const response = await fetch('http://localhost:5501/login', {
+  const register = async (email: string, password: string) => {
+    const response = await fetch('http://localhost:5501/user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,13 +42,15 @@ const Login = () => {
     });
     const data = await response.json();
     console.log(data);
-    localStorage.setItem('token', data.token);
   };
 
-  const handleNameLogin = (e: any) => {
+ 
+  // Handling the name change
+  const handleNameRegister = (e: any) => {
     setName(e.target.value);
     setSubmitted(false);
   };
+
  
   // // Handling the email change
   // const handleEmail = (e:any) => {
@@ -59,38 +59,40 @@ const Login = () => {
   // };
  
   // Handling the password change
-  const handlePasswordLogin = (e:any) => {
+  const handlePasswordRegister = (e:any) => {
     setPassword(e.target.value);
     setSubmitted(false);
   };
+
  
   // Handling the form submission
-  const handleSubmitLogin= (e:any) => {
+  const handleSubmitRegister = (e:any) => {
     e.preventDefault();
     if (name === '' || password === '') {
       setError(true);
     } else {
       setSubmitted(true);
       setError(false);
-      login(name, password);
+      register(name, password);
       // navigate to dashboard
       routeChange();
     }
   };
+
  
   // Showing success message
-
-  const successMessageLogin = () => {
+  const successMessageRegister = () => {
     return (
       <div
         className="success"
         style={{
           display: submitted ? '' : 'none',
         }}>
-        <h1>User {name} successfully logged in!</h1>
+        <h1>User {name} successfully registered!</h1>
       </div>
     );
   };
+
  
   // Showing error message if error is true
   const errorMessage = () => {
@@ -104,7 +106,7 @@ const Login = () => {
       </div>
     );
   };
- 
+
   return (
     <div className='body'>
       <div className='left' >
@@ -115,30 +117,29 @@ const Login = () => {
         <img src={loginart} className="login-art" alt="logo" />
       </div>
       <div className='right'>
-        <div className='login-form'>
+        <div className='register-form'>
           <div>
-            <h1>User Login</h1>
+            <h1>User Registration</h1>
           </div>
           <div className="messages">
             {errorMessage()}
-            {successMessageLogin()}
+            {successMessageRegister()}
           </div>
+
           <form className='form'>
             {/* Labels and inputs for form data */}
             <label className="label">Email </label>
-            <input onChange={handleNameLogin} className="login-input"
+            <input onChange={handleNameRegister} className="register-input"
               type="text" />
- 
+
             <label className="label">Password </label>
-            <input onChange={handlePasswordLogin} className="login-input"
+            <input onChange={handlePasswordRegister} className="register-input"
               type="password" />
- 
-            <button onClick={handleSubmitLogin} className="btn" type="submit">
-          Submit
+
+            <button onClick={handleSubmitRegister} className="btn" type="submit">Submit
             </button>
-            <button onClick={routeSubmit} className="btn" type="submit">
-          Register
-            </button>
+
+            <button onClick={routeLogin} className="btn" type="submit">Login</button>
           </form>
         </div>
       </div>
@@ -146,4 +147,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

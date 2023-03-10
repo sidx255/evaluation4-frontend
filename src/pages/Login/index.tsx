@@ -43,8 +43,9 @@ const Login = () => {
       }),
     });
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     localStorage.setItem('token', data.token);
+    data.token && routeChange();
   };
 
   const handleNameLogin = (e: any) => {
@@ -74,7 +75,6 @@ const Login = () => {
       setError(false);
       login(name, password);
       // navigate to dashboard
-      routeChange();
     }
   };
  

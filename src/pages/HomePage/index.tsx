@@ -8,6 +8,9 @@ import Modal from 'react-modal';
 import makeRequest from '../../utils/makeRequest';
 
 import pencil from '../../assets/pencil.png';
+import trash from '../../assets/trash.png';
+import edit from '../../assets/edit.png';
+
 
  
 const HomePage: React.FC = () => {
@@ -61,8 +64,32 @@ const HomePage: React.FC = () => {
   //   setModalIsOpen(false);
   // };
 
+  // modal for adding entity
+  const [modalIsOpen2, setModalIsOpen2] = React.useState(false);
+  const [record, setRecord] = React.useState<any>([]);
+
+  // handle entity input change
+  const handleEntityInputChange = (e: any) => {
+    setRecord(e.target.value);
+  };
+
+  // handle entity submit
+  const handleEntitySubmit = (e: any) => {
+    e.preventDefault();
+    // Do something with collection name here
+    console.log(record);
+    // Close modal
+    setModalIsOpen2(false);
+  };
+
+
+
   const entity = () => {
-    axios.get(`http://localhost:4000/content/fields/${collection.collection_id}`)
+    axios.get(`http://localhost:4000/content/fields/${collection.collection_id}`,{
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': localStorage.getItem('token')
+      }})
       .then((res: any) => {
         // console.log(res);
         setDetails(res.data);
@@ -71,29 +98,51 @@ const HomePage: React.FC = () => {
         console.log(err);
       });
   };
+  
 
   const handleNewType = (collection_name:any) => {
     // post request to create a new collection
-    axios.post('http://localhost:4000/collections', {
-      collection_name: collection_name
-    }).then((res: any) => {
-      console.log(res);
-    }
-    ).catch((err: any) => {
-      console.log(err);
-    }
-    );
+    // axios.post('http://localhost:4000/collections', {
+    //   collection_name: collection_name
+    // }, {
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     'authorization': localStorage.getItem('token')
+    //   }})
+    // console.log('XXXXXXXX');
+    axios({
+      method: 'post',
+      url: 'http://localhost:4000/collections',
+      data: { collection_name: collection_name },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('token')
+      }
+    })
+      .then((res: any) => {
+        console.log(res);
+      }
+      ).catch((err: any) => {
+        console.log(err);
+      }
+      );
   };
 
   const addField = (field_name: any) => {
     const lastkey = Object.keys(fields).length;
     // post request to create a new field
     axios.post(`http://localhost:4000/fields/${collection.collection_id}`, {
+      
       collection_id: collection.collection_id,
       fields:{
         [lastkey]: field_name
       }
 
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': localStorage.getItem('token')
+      }
     }).then((res: any) => {
       console.log(res);
     }).catch((err: any) => {
@@ -101,6 +150,43 @@ const HomePage: React.FC = () => {
     }
     );
   };
+
+  const addEntity = (entity: any) => {
+    // post request to create a new entity
+    axios.post('http://localhost:4000/content/', {
+      collection_id: collection.collection_id,
+      values:
+        entity
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': localStorage.getItem('token')
+      }}).then((res: any) => {
+      console.log(res);
+    }).catch((err: any) => {
+      console.log(err);
+    }
+    );
+  };
+
+  const deleteEntity = (content_id: any) => {
+    // delete request to delete an entity
+    axios.delete(`http://localhost:4000/content/${content_id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': localStorage.getItem('token')
+      }})
+      .then((res: any) => {
+        console.log(res);
+        
+      }).catch((err: any) => {
+        console.log(err);
+      }
+      );
+  };
+
+
+
 
   // const getFields = () => {
   //   axios.get(`http://localhost:4000/content/fields/${collection.collection_id}`)
@@ -169,7 +255,19 @@ const HomePage: React.FC = () => {
             <div className='main__info__header'>
               <p className='entity-count'>{detailscount} entities found</p>
               <div className='edit-button'>
-                <img src={pencil} alt='edit' />
+                <img src={pencil} alt='edit' onClick={()=>{setModalIsOpen2(true);}} />
+
+                <Modal isOpen={modalIsOpen}>
+                  <h2>Add entity</h2>
+                  <form onSubmit={handleEntitySubmit}>
+
+                    <label>Entity Name:</label>
+                    <input type="text" value={record} onChange={handleEntityInputChange} />
+                    <button type="submit" onClick={()=> {addEntity(record);}}>Create</button>
+                  </form>
+                  <button onClick={() => {setModalIsOpen2(false);}}>Close</button>
+                </Modal>
+
               </div>
             </div>
             <div className='main__info__body'>
@@ -193,6 +291,9 @@ const HomePage: React.FC = () => {
                           <p key={detail}> {detail.fields[key]} </p>
                         ))
                       }
+                    </div>
+                    <div className='trash-button'>
+                      <img src={trash} alt='trash' onClick={() => {deleteEntity(details[0].content_id);}}/>
                     </div>
                   </div>
                 ))

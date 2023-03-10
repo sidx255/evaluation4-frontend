@@ -14,7 +14,12 @@ import {GET_COLLECTIONS} from '../../constants/apiEndPoints';
 const Collections = ({setCollection}:any) => {
   const [collections, setCollections] = React.useState([]);
   useEffect(() => {
-    makeRequest(GET_COLLECTIONS)
+    makeRequest(GET_COLLECTIONS, {
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': `${localStorage.getItem('token')}`
+      }
+    })
       .then((res: any) => {
         setCollections(res);
         // console.log(collections);
